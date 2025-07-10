@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Relatório Financeiro</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #6799d6, #f9fbfd);
+      padding: 30px 20px;
+      color: #333;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 700;
+      color: #1a3d7c;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    form, table {
+      background-color: #fff;
+      padding: 25px 30px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(26, 61, 124, 0.1);
+      margin-bottom: 40px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #1a3d7c;
+    }
+
+    input[type="date"],
+    input[type="number"] {
+      width: 100%;
+      padding: 10px 15px;
+      margin-top: 8px;
+      border: 2px solid #cbd6e2;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="date"]:focus,
+    input[type="number"]:focus {
+      border-color: #0077cc;
+      outline: none;
+      box-shadow: 0 0 6px #8fc6ff;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 12px 28px;
+      background: #0077cc;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 10px rgba(0, 119, 204, 0.4);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    button:hover {
+      background: #005fa3;
+      box-shadow: 0 6px 15px rgba(0, 95, 163, 0.6);
+    }
+
+    #exportBtn {
+      background: linear-gradient(45deg, #ff9800, #f57c00);
+      max-width: 200px;
+      display: block;
+      margin: 0 auto 40px;
+      box-shadow: 0 4px 12px rgba(245, 124, 0, 0.7);
+    }
+
+    #exportBtn:hover {
+      background: linear-gradient(45deg, #f57c00, #e65100);
+      box-shadow: 0 6px 18px rgba(230, 81, 0, 0.9);
+    }
+
+    h3 {
+      margin-top: 35px;
+      color: #005fa3;
+      border-bottom: 2px solid #0077cc;
+      padding-bottom: 6px;
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      text-align: center;
+      border: none;
+    }
+
+    thead th {
+      background: linear-gradient(90deg, #0077cc, #005fa3);
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      border-radius: 8px 8px 0 0;
+      user-select: none;
+    }
+
+    tbody tr {
+      background-color: #ffffffcc;
+      box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+      transition: background-color 0.25s ease;
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color: #f0f5fa;
+    }
+
+    tbody tr:hover {
+      background-color: #9ebde9;
+    }
+
+    .lucro-positivo {
+      color: #28a745;
+      font-weight: 700;
+      position: relative;
+      padding-right: 20px;
+    }
+    .lucro-positivo::after {
+      content: "⬆️";
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+    }
+
+    .lucro-negativo {
+      color: #dc3545;
+      font-weight: 700;
+      position: relative;
+      padding-right: 20px;
+    }
+    .lucro-negativo::after {
+      content: "⬇️";
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+    }
+
+    .btn-editar, .btn-excluir {
+      cursor: pointer;
+      padding: 6px 14px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background 0.3s ease;
+      user-select: none;
+    }
+
+    .btn-editar {
+      background-color: #28a745;
+    }
+
+    .btn-editar:hover {
+      background-color: #218838;
+    }
+
+    .btn-excluir {
+      background-color: #dc3545;
+    }
+
+    .btn-excluir:hover {
+      background-color: #c82333;
+    }
+
+    /* Responsividade simples */
+    @media (max-width: 960px) {
+      form, table {
+        padding: 20px 15px;
+      }
+      table {
+        font-size: 0.85rem;
+      }
+      button {
+        font-size: 1rem;
+        padding: 10px 20px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px 10px;
+      }
+      h1 {
+        font-size: 1.6rem;
+      }
+      form, table {
+        padding: 15px 12px;
+      }
+      table, tbody tr {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Relatório Financeiro</h1>
+
+  <form id="financeForm">
+    <label>Data</label>
+    <input type="date" id="dataRef" required>
+      <h3>
+      <img src="bradesco.png.png" alt="Bradesco" style="height:24px;">
+      Banco Bradesco
+    </h3>
+    <label>Limite Total (R$)</label>
+    <input type="number" id="limiteBradesco" required step="0.01" min="0">
+    <label>Valor Antecipado (R$)</label>
+    <input type="number" id="antecipadoBradesco" required step="0.01" min="0">
+   
+    
+    <h3>
+      <img src="itau.png.png" alt="Itaú" style="height:24px;">
+      Banco Itaú
+    </h3>
+    <label>Limite Total (R$)</label>
+    <input type="number" id="limiteItau" required step="0.01" min="0">
+    <label>Valor Antecipado (R$)</label>
+    <input type="number" id="antecipadoItau" required step="0.01" min="0">
+    <h3>Capital de giro</h3>
+    <label>informe a capital de giro (R$)</label>
+    <input type="number" id="emprestimoDisponivel" required step="0.01" min="0">
+      <h3>total de contas</h3>
+      <label>Total de Contos Bradesco+itau (R$)</label>
+      <input type="number" id="totalContas" required step="0.01" min="0">
+ 
+    <button type="submit">Salvar Relatório</button>
+  </form>
+
+  <button id="exportBtn">Exportar para Excel</button>
+  <h2 style="text-align:center; color:#1a3d7c;">Histórico de Relatórios</h2>
+<div style="text-align:center; margin-bottom:20px;">
+  <button id="graficoBtn">📊 Gerar Gráfico Comparativo</button>
+  <button 
+    onclick="window.location.href='contas.html'"
+    style="margin-left: 15px; padding: 12px 28px; background: #0077cc; color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 119, 204, 0.4);">
+    ➕ Ir para Contas
+  </button>
+</div>
+<canvas id="graficoFinanceiro" style="width: 1000%; max-width: 500px; height: 250px; margin: 20px auto; display: none;"></canvas>
+
+  <table id="historicoTable" aria-label="Tabela de histórico de relatórios financeiros">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Limite Total 178.000 brad 210.000 itau </th>
+        <th><img src="bradesco.png.png" alt="bradesco" style="height:18px;"><br>antecipado Bradesco</th>
+        <th><img src="itau.png.png" alt="itau" style="height:18px;"><br>antecipado Itau</th>
+        <th>Limite antecipaçao Disponível brad+itau</th>
+          <th><img src="bradesco.png.png" alt="bradesco" style="height:18px;"><br>disponivel Bradesco</th>
+         <th><img src="itau.png.png" alt="Itaú" style="height:18px;"><br>disponivel Itau</th>
+            <th>total antecipado</th>
+        <th>CapitaldeGiro</th>
+        <th>Total de Contas</th>
+        <th>total estimado</th>
+        <th>Editar</th>
+        <th>Excluir</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- SheetJS library -->
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/shim.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
+  <script>
+    const form = document.getElementById("financeForm");
+    const tabela = document.querySelector("#historicoTable tbody");
+    const exportBtn = document.getElementById("exportBtn");
+
+    const formatarMoeda = (v) => Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    const formatarData = (isoDate) => {
+      const d = new Date(isoDate);
+      return d.toLocaleDateString("pt-BR");
+    };
+
+    async function carregar() {
+      try {
+        const res = await fetch("http://localhost:3000/relatorios");
+        if (!res.ok) throw new Error("Erro ao carregar dados");
+        const relatorios = await res.json();
+
+        tabela.innerHTML = "";
+
+        relatorios.forEach(dados => {
+          const classeLucro = dados.lucro >= 0 ? 'lucro-positivo' : 'lucro-negativo';
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${formatarData(dados.data)}</td>
+            <td>${formatarMoeda(dados.limite_total)}</td>
+            <td>${formatarMoeda(dados.antecipado_bradesco)}</td>
+            <td>${formatarMoeda(dados.antecipado_itau)}</td>
+            <td>${formatarMoeda(dados.limite_disponivel)}</td>
+            <td>${formatarMoeda(dados.disponivel_bradesco)}</td>
+            <td>${formatarMoeda(dados.disponivel_itau)}</td>
+            <td>${formatarMoeda(dados.total_antecipado)}</td>
+            <td>${formatarMoeda(dados.emprestimo)}</td>
+            <td>${formatarMoeda(dados.total_contas)}</td>
+            <td class="${classeLucro}">${formatarMoeda(dados.lucro)}</td>
+            <td><button class="btn-editar" onclick="editarRelatorio(${dados.id})">Editar</button></td>
+            <td><button class="btn-excluir" onclick="excluirRelatorio(${dados.id})">Excluir</button></td>
+          `;
+          tabela.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Erro ao carregar relatórios:", err);
+        alert("Erro ao carregar os relatórios.");
+      }
+    }
+
+    async function excluirRelatorio(id) {
+      if (!confirm("Deseja realmente excluir este relatório?")) return;
+      try {
+        const res = await fetch(`http://localhost:3000/relatorios/${id}`, { method: "DELETE" });
+        if (!res.ok) throw new Error("Erro ao excluir");
+        alert("Relatório excluído com sucesso!");
+        carregar();
+      } catch (err) {
+        alert("Erro ao excluir relatório");
+        console.error(err);
+      }
+    }
+
+    async function editarRelatorio(id) {
+      try {
+        const res = await fetch(`http://localhost:3000/relatorios`);
+        if (!res.ok) throw new Error("Erro ao buscar dados");
+
+        const relatorios = await res.json();
+        const rel = relatorios.find(r => r.id === id);
+        if (!rel) return alert("Relatório não encontrado");
+
+        document.getElementById("dataRef").value = rel.data.slice(0,10);
+        document.getElementById("limiteBradesco").value = rel.limite_bradesco;
+        document.getElementById("antecipadoBradesco").value = rel.antecipado_bradesco;
+        document.getElementById("limiteItau").value = rel.limite_itau;
+        document.getElementById("antecipadoItau").value = rel.antecipado_itau;
+        document.getElementById("emprestimoDisponivel").value = rel.emprestimo;
+        document.getElementById("totalContas").value = rel.totalContas;
+
+        form.dataset.editId = id;
+        form.querySelector("button").textContent = "Atualizar Relatório";
+
+      } catch (err) {
+        alert("Erro ao carregar dados para edição");
+        console.error(err);
+      }
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = document.getElementById("dataRef").value;
+      const limiteBradesco = Number(document.getElementById("limiteBradesco").value);
+      const antecipadoBradesco = Number(document.getElementById("antecipadoBradesco").value);
+      const limiteItau = Number(document.getElementById("limiteItau").value);
+      const antecipadoItau = Number(document.getElementById("antecipadoItau").value);
+      const emprestimo = Number(document.getElementById("emprestimoDisponivel").value);
+      const totalContas = Number(document.getElementById("totalContas").value);
+
+      const editId = form.dataset.editId;
+
+      try {
+        let response;
+       
+        if (editId) {
+      
+          response = await fetch(`http://localhost:3000/relatorios/${editId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              data,
+              limiteBradesco,
+              antecipadoBradesco,
+              limiteItau,
+              antecipadoItau,
+              emprestimo,
+              totalContas
+            }),
+          });
+        } else {
+          response = await fetch("http://localhost:3000/relatorios", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              data,
+              limiteBradesco,
+              antecipadoBradesco,
+              limiteItau,
+              antecipadoItau,
+              emprestimo,
+               totalContas
+            }),
+          });
+        }
+
+        if (!response.ok) throw new Error("Erro na requisição");
+
+        alert(editId ? "Relatório atualizado!" : "Relatório salvo!");
+        form.reset();
+        delete form.dataset.editId;
+        form.querySelector("button").textContent = "Salvar Relatório";
+        carregar();
+
+      } catch (err) {
+        alert("Erro ao salvar ou atualizar relatório");
+        console.error(err);
+      }
+    });
+
+    exportBtn.addEventListener("click", () => {
+      const wb = XLSX.utils.book_new();
+
+      // Clona a tabela pra remover colunas Editar e Excluir
+      const tabelaOriginal = document.getElementById("historicoTable");
+      const tabelaParaExportar = tabelaOriginal.cloneNode(true);
+
+      // Remove as colunas Editar e Excluir (últimas 2 colunas)
+      Array.from(tabelaParaExportar.querySelectorAll("thead th:nth-last-child(-n+2), tbody td:nth-last-child(-n+2)"))
+        .forEach(el => el.remove());
+
+      // Converte para worksheet
+      const ws = XLSX.utils.table_to_sheet(tabelaParaExportar);
+
+      // Ajusta largura das colunas (em caracteres)
+      ws['!cols'] = [
+        {wch:12}, // Data
+        {wch:15}, // Limite Total
+        {wch:15}, // Ant. Bradesco
+        {wch:15}, // Ant. Itaú
+        {wch:15}, // Limite Disponível
+        {wch:15}, // Disp. Bradesco
+        {wch:15}, // Disp. Itaú
+        {wch:15}, // Ant. do Mês
+        {wch:15}, // Empréstimo
+         {wch:15}, // Empréstimo
+        {wch:15}, // total_contas
+        {wch:18}, // Lucro Estimado
+      ];
+
+      // Formata cabeçalho: negrito e fundo azul claro
+      const range = XLSX.utils.decode_range(ws['!ref']);
+      for(let C = range.s.c; C <= range.e.c; ++C) {
+        const cellAddress = XLSX.utils.encode_cell({r:0, c:C});
+        if(!ws[cellAddress]) continue;
+        ws[cellAddress].s = {
+          fill: { fgColor: { rgb: "BDD7EE" } },
+          font: { bold: true, color: { rgb: "000000" } },
+          alignment: { horizontal: "center" }
+        };
+      }
+
+      // Alinha texto das células no centro
+      for(let R = 1; R <= range.e.r; ++R) {
+        for(let C = 0; C <= range.e.c; ++C) {
+          const cellAddress = XLSX.utils.encode_cell({r:R, c:C});
+          if(!ws[cellAddress]) continue;
+          ws[cellAddress].s = {
+            alignment: { horizontal: "center" }
+          };
+        }
+      }
+
+      XLSX.utils.book_append_sheet(wb, ws, "Relatórios");
+
+      XLSX.writeFile(wb, "relatorios_financeiros_formatado.xlsx", { bookType: 'xlsx', bookSST:true, type: 'binary' });
+    });
+
+    carregar();
+    let grafico;
+
+document.getElementById("graficoBtn").addEventListener("click", async () => {
+  try {
+    const res = await fetch("http://localhost:3000/relatorios");
+    const dados = await res.json();
+
+    const labels = dados.map(r => new Date(r.data).toLocaleDateString("pt-BR"));
+    const bradesco = dados.map(r => r.antecipado_bradesco);
+    const itau = dados.map(r => r.antecipado_itau);
+    const estimativa = dados.map(r => r.lucro); // ainda usa o campo `lucro`, mas com nome novo
+
+    const ctx = document.getElementById("graficoFinanceiro").getContext("2d");
+    document.getElementById("graficoFinanceiro").style.display = "block";
+
+    if (grafico) grafico.destroy();
+
+    grafico = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Bradesco',
+            data: bradesco,
+            backgroundColor: '#0077cc'
+          },
+          {
+            label: 'Itaú',
+            data: itau,
+            backgroundColor: '#f57c00'
+          },
+          {
+            label: 'Estimativa',
+            data: estimativa,
+            backgroundColor: estimativa.map(v => v >= 0 ? '#28a745' : '#dc3545')
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Comparativo por Data',
+            font: {
+              size: 18,
+              weight: 'bold'
+            }
+          },
+          legend: {
+            position: 'bottom'
+          },
+          tooltip: {
+            callbacks: {
+              label: ctx => `${ctx.dataset.label}: R$ ${ctx.parsed.y.toLocaleString('pt-BR')}`
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: value => `R$ ${value.toLocaleString('pt-BR')}`
+            }
+          }
+        }
+      }
+    });
+
+  } catch (e) {
+    alert("Erro ao gerar gráfico");
+    console.error(e);
+  }
+});
+
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</body>
+</html>
